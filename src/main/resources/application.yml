@@ -1,0 +1,6 @@
+app:
+    datasource:
+        jdbc-url: jdbc:mysql://localhost:3306/biodatadb
+        username: root
+        password: root
+        pool-size: 30
