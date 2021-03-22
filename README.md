@@ -9,7 +9,8 @@ Defined endpoints:
     GET: */api/v1/persons/{id}* Get person by id
     PUT: */api/v1/persons/{id}* Edit person by an id
     DELETE: */api/v1/persons/{id}* DELETE person by id
-	
+
+
 Example request body schema for POST and PUT
 {
     "name": "Ajagbe Tunde",
