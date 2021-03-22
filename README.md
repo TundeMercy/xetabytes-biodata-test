@@ -15,10 +15,11 @@ Defined endpoints:
     DELETE: */api/v1/persons/{id}* DELETE person by id
 
 Example request body schema for POST and PUT
-{
+
+```{
     "name": "Ajagbe Tunde",
     "gender": "Male",
     "email": "example@example.com",
     "phoneNumber": "+2348106887783",
     "about": "Software Developer"
-}
+}```
