@@ -1,6 +1,7 @@
 package com.simplet.biodata.api;
 
 import com.simplet.biodata.model.Biodata;
+import com.simplet.biodata.model.ResponseModel;
 import com.simplet.biodata.repository.BioDataRepository;
 import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,40 +23,51 @@ public class BiodataController {
     }
 
     @PostMapping
-    public Biodata addPerson(@RequestBody Biodata biodata){
+    public ResponseModel<Biodata> addPerson(@RequestBody Biodata biodata){
         bioDataRepository.save(biodata);
-        return biodata;
+        ResponseModel<Biodata> response = new ResponseModel<>("Saved Successfully", biodata);
+        return response;
     }
 
     @GetMapping(path = "{id}")
-    public Optional<Biodata> getPerson(@PathVariable @NotNull Long id){
-        return bioDataRepository.findById(id);
+    public ResponseModel<Optional<Biodata>> getPerson(@PathVariable @NotNull Long id){
+        Optional<Biodata> biodata = bioDataRepository.findById(id);
+        ResponseModel<Optional<Biodata>> response = new ResponseModel<>();
+        if (biodata.isPresent()) {
+            response.setMessage("Fetched successfully");
+            response.setData(biodata);
+        } else {
+            response.setMessage("No data found with the specified id");
+            response.setData(null);
+        }
+        return response;
     }
 
     @GetMapping()
-    public List<Biodata> getPersons(){
-        return bioDataRepository.findAll();
+    public ResponseModel<List<Biodata>> getPersons(){
+        List<Biodata> biodataList =  bioDataRepository.findAll();
+        return new ResponseModel<List<Biodata>>("Success", biodataList);
     }
 
     @PutMapping(path = "{id}")
-    public Optional<Biodata> editPerson(@PathVariable @NotNull Long id, @RequestBody @NotNull Biodata biodata){
+    public ResponseModel<Optional<Biodata>> editPerson(@PathVariable @NotNull Long id, @RequestBody @NotNull Biodata biodata){
         Optional<Biodata> personToEdit = bioDataRepository.findById(id);
         if (personToEdit.isPresent()){
             biodata.setId(personToEdit.get().getId());
             bioDataRepository.save(biodata);
-            return Optional.of(biodata);
+            return new ResponseModel<Optional<Biodata>>("Edited Successfully", personToEdit);
         }
-        return Optional.empty();
+        return new ResponseModel<>("No record found for the specified ID", null);
     }
 
     @DeleteMapping(path = "{id}")
-    public Optional<Optional<Biodata>> deletePerson(@PathVariable @NotNull Long id){
+    public ResponseModel<Optional<Biodata>> deletePerson(@PathVariable @NotNull Long id){
         Optional<Biodata> personToDelete = bioDataRepository.findById(id);
         if (personToDelete.isPresent()){
             bioDataRepository.delete(personToDelete.get());
-            return Optional.of(personToDelete);
+            return new ResponseModel<Optional<Biodata>>("Record Deleted Successfully", personToDelete);
         }
-        return Optional.empty();
+        return new ResponseModel<Optional<Biodata>>("No record found for the specified ID", null);
     }
 
 }
